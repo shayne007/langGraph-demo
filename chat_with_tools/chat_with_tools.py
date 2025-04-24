@@ -21,8 +21,8 @@ class State(TypedDict):
 graph_builder = StateGraph(State)
 
 
-tool = TavilySearchResults(max_results=2)
-tools = [tool]
+search = TavilySearchResults(max_results=2)
+tools = [search]
 llm = ChatOpenAI(
     model="deepseek-chat",  
     base_url="https://api.deepseek.com",
@@ -38,7 +38,7 @@ def chatbot(state: State):
 
 graph_builder.add_node("chatbot", chatbot)
 
-tool_node = ToolNode(tools=[tool])
+tool_node = ToolNode(tools=[search])
 graph_builder.add_node("tools", tool_node)
 
 graph_builder.add_conditional_edges(
