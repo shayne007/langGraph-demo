@@ -1,5 +1,5 @@
 import pytest
-from chat_with_human_interrupt import graph, State
+from human_interrupt import graph, State
 import uuid
 from langchain_core.messages import AIMessage
 
@@ -38,7 +38,7 @@ def test_state_structure():
 
 def test_tool_availability():
     """Test that required tools are available"""
-    from chat_with_human_interrupt import tools
+    from human_interrupt import tools
     for tool in tools:
       print(tool.name)
     assert len(tools) == 2

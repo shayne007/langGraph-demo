@@ -5,3 +5,4 @@ langchain-openai
 python-dotenv
 tavily-python 
 langchain_community
+langchain_tavily
