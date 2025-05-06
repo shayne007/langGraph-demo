@@ -74,12 +74,13 @@ for event in events:
   if "messages" in event:
     event["messages"][-1].pretty_print()
 
-human_response = (
-  "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
-  " It's much more reliable and extensible than simple autonomous agents."
-)
-
+# human_response = (
+#   "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
+#   " It's much more reliable and extensible than simple autonomous agents."
+# )
+human_response=input("what is advice for building an AI agent?")
 human_command = Command(resume={"data": human_response})
+
 
 events = graph.stream(human_command, config, stream_mode="values")
 for event in events:

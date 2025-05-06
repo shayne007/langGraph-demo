@@ -85,3 +85,39 @@ graph_builder.add_edge(START, "chatbot")
 
 memory = MemorySaver()
 graph = graph_builder.compile(checkpointer=memory)
+
+user_input = (
+    "Can you look up when LangGraph was released? "
+    "When you have the answer, use the human_assistance tool for review."
+)
+config = {"configurable": {"thread_id": "1"}}
+
+events = graph.stream(
+    {"messages": [{"role": "user", "content": user_input}]},
+    config,
+    stream_mode="values",
+)
+for event in events:
+    if "messages" in event:
+        event["messages"][-1].pretty_print()
+
+correct = input("Is this correct? ")
+if correct.lower().startswith("y"):
+    name = "LangGraph"
+    birthday = "Jan 18, 2024"
+else:
+    name = input("What is your name? ")
+    birthday = input("What is your birthday? ")
+human_command = Command(
+    resume={
+        "correct?": correct,
+        "name": name,
+        "birthday": birthday,
+    },
+)
+
+
+events = graph.stream(human_command, config, stream_mode="values")
+for event in events:
+    if "messages" in event:
+        event["messages"][-1].pretty_print()
