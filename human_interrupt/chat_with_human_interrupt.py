@@ -63,26 +63,25 @@ graph_builder.add_edge(START, "chatbot")
 memory = MemorySaver()
 graph = graph_builder.compile(checkpointer=memory)
 
-user_input = "I need some expert guidance for building an AI agent. Could you request assistance for me?"
+init_user_input = "I need some expert guidance for building an AI agent. Could you request assistance for me?"
 config = {"configurable": {"thread_id": "1"}}
 
-events = graph.stream(
-    {"messages": [{"role": "user", "content": user_input}]},
-    config,
-    stream_mode="values",
-)
+messages = [{"role": "user", "content": init_user_input}]
+
+init_state = {"messages": messages}
+events = graph.stream(init_state, config, stream_mode="values")
 for event in events:
   if "messages" in event:
     event["messages"][-1].pretty_print()
 
 human_response = (
-    "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
-    " It's much more reliable and extensible than simple autonomous agents."
+  "We, the experts are here to help! We'd recommend you check out LangGraph to build your agent."
+  " It's much more reliable and extensible than simple autonomous agents."
 )
 
 human_command = Command(resume={"data": human_response})
 
 events = graph.stream(human_command, config, stream_mode="values")
 for event in events:
-    if "messages" in event:
-        event["messages"][-1].pretty_print()
+  if "messages" in event:
+    event["messages"][-1].pretty_print()
