@@ -70,15 +70,10 @@ class JokeState(TypedDict):
 # This is the function we will use to generate the subjects of the jokes
 def generate_topics(state: OverallState):
     prompt = subjects_prompt.format(topic=state["topic"])
-    response = model.with_structured_output(Subjects).invoke(prompt)
-    return {"subjects": response.subjects}
-
-
-# Here we generate a joke, given a subject
-def generate_joke(state: JokeState):
-    prompt = joke_prompt.format(subject=state["subject"])
-    response = model.with_structured_output(Joke).invoke(prompt)
-    return {"jokes": [response.joke]}
+    response = model.invoke(prompt)
+    # Parse the comma-separated response into a list
+    subjects = [s.strip() for s in response.content.split(",")]
+    return {"subjects": subjects}
 
 
 # Here we define the logic to map out over the generated subjects
@@ -90,12 +85,25 @@ def continue_to_jokes(state: OverallState):
     return [Send("generate_joke", {"subject": s}) for s in state["subjects"]]
 
 
+# Here we generate a joke, given a subject
+def generate_joke(state: JokeState):
+    prompt = joke_prompt.format(subject=state["subject"])
+    response = model.invoke(prompt)
+    return {"jokes": [response.content]}
+
+
 # Here we will judge the best joke
 def best_joke(state: OverallState):
-    jokes = "\n\n".join(state["jokes"])
+    jokes = "\n\n".join(f"ID {i}: {joke}" for i, joke in enumerate(state["jokes"]))
     prompt = best_joke_prompt.format(topic=state["topic"], jokes=jokes)
-    response = model.with_structured_output(BestJoke).invoke(prompt)
-    return {"best_selected_joke": state["jokes"][response.id]}
+    response = model.invoke(prompt)
+    # Extract the ID number from the response
+    try:
+        id_num = int(''.join(filter(str.isdigit, response.content)))
+        return {"best_selected_joke": state["jokes"][id_num]}
+    except (ValueError, IndexError):
+        # Fallback to first joke if parsing fails
+        return {"best_selected_joke": state["jokes"][0]}
 
 
 # Construct the graph: here we put everything together to construct our graph
