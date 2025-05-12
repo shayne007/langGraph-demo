@@ -27,7 +27,7 @@ def analyze_stocks(stock_codes):
     mpl.rcParams['font.family'] = 'sans-serif'
 
     # 读取数据
-    data_path = os.path.join('D:\\workspace\\python\\akshare\\code06\\data',
+    data_path = os.path.join('/Users/fengshiyi/Downloads/shayne/learning/LLM/py-projects/langGraph-demo/test_data/planning_like_manus/akshare',
                              'all_data.csv')
     df = pd.read_csv(data_path)
 
@@ -128,7 +128,7 @@ def analyze_stocks(stock_codes):
     results = pd.DataFrame(all_results)
 
     # 保存结果到CSV
-    output_dir = os.path.join('code06', 'output')
+    output_dir = os.path.join('/Users/fengshiyi/Downloads/shayne/learning/LLM/py-projects/langGraph-demo/test_data/planning_like_manus', 'output')
     os.makedirs(output_dir, exist_ok=True)
     results.to_csv(os.path.join(output_dir, 'stocks_analysis.csv'), index=False,
                    encoding='utf-8-sig')
@@ -155,9 +155,9 @@ def analyze_stocks(stock_codes):
 if __name__ == '__main__':
     # 示例使用
     try:
-        stock_codes = ['600600', '300054', '600698',
-                       '600573']  # 可以替换为您想要分析的股票代码列表
-        results = analyze_stocks(stock_codes)
+        stock_codes = ['600600', '300054', '600698', '600573']  # 可以替换为您想要分析的股票代码列表
+        # Use invoke method instead of direct call
+        results = analyze_stocks.invoke({"stock_codes": stock_codes})
         print("\n分析结果:")
         print(results)
     except Exception as e:

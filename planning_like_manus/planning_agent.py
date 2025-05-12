@@ -2,8 +2,8 @@ from langgraph.graph import MessagesState, StateGraph, START, END
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
 from typing_extensions import Literal
 from llm import DeepSeekR1, DeepSeekV3
-from tools.financial_report import get_financial_report
-from tools.stock_price import analyze_stocks
+from tools.read_local_financial_report import get_financial_report
+from tools.analysis_local_all_stock_price import analyze_stocks
 from prompt import plan_prompt
 
 # Nodes
@@ -117,9 +117,10 @@ agent_builder.add_edge("environment", "llm_call")
 agent = agent_builder.compile()
 
 # 保存代理工作流程图到文件
-graph_png = agent.get_graph(xray=True).draw_mermaid_png()
-with open("code06/agent_graph.png", "wb") as f:
-    f.write(graph_png)
+# Get the Mermaid definition
+mermaid_def = agent.get_graph(xray=True).draw_mermaid()
+with open("/Users/fengshiyi/Downloads/shayne/learning/LLM/py-projects/langGraph-demo/test_data/planning_like_manus/output/agent_graph.mmd", "w") as f:
+    f.write(mermaid_def)
 
 # Invoke
 messages = [HumanMessage(

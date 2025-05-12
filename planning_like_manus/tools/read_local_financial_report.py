@@ -63,14 +63,16 @@ def load_data():
 
     df = ak.stock_yjbb_em(date="20241231")
 
-    df.to_csv('financial_report.csv')
+    df.to_csv('/Users/fengshiyi/Downloads/shayne/learning/LLM/py-projects/langGraph-demo/test_data/planning_like_manus/akshare/'+'financial_report.csv')
 
 
 # 示例使用
 if __name__ == "__main__":
+    load_data()
     # 测试用的股票代码列表
-    test_codes = ['600600', '002461', '000729', '600573']
-    result = get_financial_report(test_codes)
+    test_codes = ['600600', '300054', '600698', '600573']  # 可以替换为您想要分析的股票代码列表
+    # Use invoke method instead of direct call
+    result = get_financial_report.invoke({"stock_codes": test_codes})
 
     if result:
         # 打印结果

@@ -1,4 +1,9 @@
 import os
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
 
 from langchain_openai import ChatOpenAI
 
