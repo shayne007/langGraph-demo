@@ -1,7 +1,7 @@
 from langgraph.graph import MessagesState, StateGraph, START, END
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
 from typing_extensions import Literal
-from llm import DeepSeekR1, DeepSeekV3
+from llm import Tongyi, DeepSeekV3
 from tools.read_local_financial_report import get_financial_report
 from tools.analysis_local_all_stock_price import analyze_stocks
 from prompt import plan_prompt
@@ -10,7 +10,7 @@ from prompt import plan_prompt
 tools = [get_financial_report, analyze_stocks]
 tools_by_name = {tool.name: tool for tool in tools}
 deepseek_v3 = DeepSeekV3()
-deepseek_r1 = DeepSeekR1()
+deepseek_r1 = Tongyi()
 llm_with_tools = deepseek_v3.bind_tools(tools)
 
 
@@ -27,12 +27,13 @@ def plan_node(state):
         [SystemMessage(content=prompt), state["messages"][0]])
 
     state["plan"] = response.content
-    print(state["plan"])
+    print(f"the plan returned by reasoner:\n {state["plan"]}")
     return state
 
 
 def llm_call(state):
     """LLM decides whether to call a tool or not"""
+    # 创建消息列表 这里的“+”号操作是两个数组的合并
     messages = [
                    SystemMessage(
                        content=f"""
@@ -76,6 +77,8 @@ def tool_node(state):
         # result.append(ToolMessage(content=observation, tool_call_id=tool_call["id"]))
         state["messages"].append(
             ToolMessage(content=observation, tool_call_id=tool_call["id"]))
+        print(f"tool_call: {tool_call}")
+        print(f"observation: {observation}")
     return state
 
 
@@ -128,4 +131,5 @@ messages = [HumanMessage(
 # question = "对比一下 600600, 002461, 000729, 600573的股价表现和财务情况，哪家更值得投资"
 ret = agent.invoke({"plan": "", "messages": messages})
 
+print("------final answer-------")
 print(ret["messages"][-1].content)
