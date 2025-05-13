@@ -9,3 +9,4 @@ langchain_tavily
 akshare
 pandas
 matplotlib
+mcp
