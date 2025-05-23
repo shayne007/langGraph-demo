@@ -1,6 +1,7 @@
 langgraph
 langsmith
 langchain_anthropic
+langchain_deepseek
 langchain-openai
 python-dotenv
 tavily-python 
