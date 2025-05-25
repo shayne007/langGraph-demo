@@ -1,3 +1,11 @@
 /.venv/
 /.idea/
 /test_data/
+/.roo/
+/.DS_Store
+/**/__pycache__/
+/*.pyc
+/*.pyo
+/*.exe
+/*.dll
+/*.o
