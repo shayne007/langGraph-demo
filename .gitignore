@@ -3,7 +3,7 @@
 /.idea/
 /test_data/
 /.roo/
-/.DS_Store
+/**.DS_Store
 /**/__pycache__/
 /*.pyc
 /*.pyo
