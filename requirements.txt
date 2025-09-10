@@ -12,3 +12,6 @@ akshare
 pandas
 matplotlib
 mcp
+PyGithub  
+PyYAML 
+pathlib
